@@ -185,8 +185,15 @@
         // Starts Private API - unfinished
 
         $scope.getbalances = function (callback) {
+            var url = $scope.opts.baseUrl + 'GetMarketOrders/';
+            url = marketSymbol ? url + marketSymbol.replace("/", "_") : url;
+            $http.get(url)
+                .then(function successCallback(result) {
+                    callback(result);
+                });
         }
         $scope.getbalance = function (options, callback) {
+
         }
 
         // End of calls
