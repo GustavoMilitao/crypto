@@ -2,16 +2,17 @@
     'use strict';
 
     angular
-        .module('app.cryptopia', [])
-        .controller('CryptopiaController', CryptopiaController);
+        .module('app.cryptopare', [])
+        .controller('CryptopareController', CryptopareController);
 
-    function CryptopiaController($scope, $http, $timeout) {
+    function CryptopareController($scope, $http, $timeout) {
 
 
         $scope.markets = [];
 
         $scope.opts = {
-            baseUrl: 'https://www.cryptopia.co.nz/api/',
+            baseUrlCryptopia: 'https://www.cryptopia.co.nz/api/',
+            baseUrlBinance: 'https://www.binance.com/api/v1/',
             apikey: 'APIKEY',
             apisecret: 'APISECRET',
             verbose: false,
@@ -53,7 +54,7 @@
         }
 
 
-        $scope.getUsableListFromMarkets = function (result) {
+        $scope.getUsableListFromMarketsCryptopia = function (result) {
             var res = result.data.Data
                 .filter(function (elem) {
                     return elem.Volume > 0
@@ -77,7 +78,7 @@
             return res;
         }
 
-        $scope.getMarketWithLastTransactions =
+        $scope.getMarketWithLastTransactionsCryptopia =
             function (callback, result, count, min, byVariation) {
                 var itemsProcessed = 0;
                 result.forEach(function (elem) {
@@ -112,10 +113,10 @@
                 });
             }
 
-        $scope.getBestMarkets = function (callback, baseMarket, count, min, byVariation) {
-            $scope.getmarkets(function (result) {
-                var formattedList = $scope.getUsableListFromMarkets(result);
-                $scope.getMarketWithLastTransactions(function (list) {
+        $scope.getBestMarketsCryptopia = function (callback, baseMarket, count, min, byVariation) {
+            $scope.getMarketsCryptopia(function (result) {
+                var formattedList = $scope.getUsableListFromMarketsCryptopia(result);
+                $scope.getMarketWithLastTransactionsCryptopia(function (list) {
                     callback(list);
                 }, formattedList, count, min, byVariation);
             }, baseMarket, 1);
@@ -123,8 +124,8 @@
 
 
         // Starts Cryptopia
-        $scope.getmarkets = function (callback, baseMarket, hours) {
-            var url = $scope.opts.baseUrl + 'GetMarkets/';
+        $scope.getMarketsCryptopia = function (callback, baseMarket, hours) {
+            var url = $scope.opts.baseUrlCryptopia + 'getMarkets/';
             url = baseMarket ? url + baseMarket : url;
             if (baseMarket) {
                 url = hours ? url + '/' + hours : url;
@@ -136,8 +137,8 @@
         }
 
         // Starts Cryptopia
-        $scope.getmarket = function (callback, marketSymbol, hours) {
-            var url = $scope.opts.baseUrl + 'GetMarket/';
+        $scope.getMarketCryptopia = function (callback, marketSymbol, hours) {
+            var url = $scope.opts.baseUrlCryptopia + 'GetMarket/';
             url = marketSymbol ? url + marketSymbol : url;
             if (marketSymbol) {
                 url = hours ? url + '/' + hours : url;
@@ -147,23 +148,23 @@
                     callback(result);
                 });
         }
-        $scope.getcurrencies = function (callback) {
-            var url = $scope.opts.baseUrl + 'GetCurrencies';
+        $scope.getCurrenciesCryptopia = function (callback) {
+            var url = $scope.opts.baseUrlCryptopia + 'GetCurrencies';
             $http.get(url)
                 .then(function successCallback(result) {
                     callback(result);
                 });
         }
-        $scope.gettradepairs = function (callback) {
-            var url = $scope.opts.baseUrl + 'GetTradePairs';
+        $scope.getTradePairsCryptopia = function (callback) {
+            var url = $scope.opts.baseUrlCryptopia + 'GetTradePairs';
             $http.get(url)
                 .then(function successCallback(result) {
                     callback(result);
                 });
         }
 
-        $scope.getmarkethistory = function (callback, marketSymbol, hours) {
-            var url = $scope.opts.baseUrl + 'GetMarketHistory/';
+        $scope.getMarketHistoryCryptopia = function (callback, marketSymbol, hours) {
+            var url = $scope.opts.baseUrlCryptopia + 'GetMarketHistory/';
             url = marketSymbol ? url + marketSymbol.replace("/", "_") : url;
             if (marketSymbol) {
                 url = hours ? url + '/' + hours : url;
@@ -173,8 +174,8 @@
                     callback(result);
                 });
         }
-        $scope.getmarketorders = function (callback, marketSymbol, hours) {
-            var url = $scope.opts.baseUrl + 'GetMarketOrders/';
+        $scope.getMarketOrdersCryptopia = function (callback, marketSymbol, hours) {
+            var url = $scope.opts.baseUrlCryptopia + 'GetMarketOrders/';
             url = marketSymbol ? url + marketSymbol.replace("/", "_") : url;
             $http.get(url)
                 .then(function successCallback(result) {
@@ -185,22 +186,92 @@
         // Starts Private API - unfinished
 
         $scope.getbalances = function (callback) {
-            var url = $scope.opts.baseUrl + 'GetMarketOrders/';
-            url = marketSymbol ? url + marketSymbol.replace("/", "_") : url;
-            $http.get(url)
-                .then(function successCallback(result) {
-                    callback(result);
-                });
         }
         $scope.getbalance = function (options, callback) {
-
         }
 
         // End of calls
 
+
+        // $scope.getObjectFromSymbol = function (symbol, list) {
+        //     var lst = $.grep(list, function (e) { return e.symbol == symbol; });
+        //     if (lst.length > 0)
+        //         return lst[0];
+        //     return undefined;
+        // }
+
+        // $scope.getFormatedBinanceMarketsWithPrice = function(callback, markets){
+        //     var url = $scope.opts.baseUrlBinance + 'depth';
+        //     var prices = [];
+        //     var counter = 0;
+        //     for(var i = 0; i < markets.length; i++){
+        //         counter++;
+        //         var symbol = markets[i].symbol;
+        //         $http.get(url + '?symbol=' + symbol +'&limit='+5)
+        //         .then(function(response){
+        //             prices.push({
+        //                 precoPedido : response.data.asks[0],
+        //                 precoOfertado : response.data.bids[0]
+        //             });
+        //             if(counter == markets.length){
+        //                 for(var j = 0; j < markets.length; j++){
+        //                     markets[j].precoPedido = prices[j].precoPedido;
+        //                     markets[j].precoOfertado = prices[j].precoOfertado;
+        //                 }
+        //                 callback(markets);
+        //             }
+        //         });
+        //     }
+        // }
+
+        $scope.getMarketsBinance = function (callback) {
+            var url = $scope.opts.baseUrlBinance + 'exchangeInfo';
+            $http.get(url)
+                .then(function successCallback(result) {
+                    var r = result.data.symbols.filter(function (e) {
+                        return e.quoteAsset == "BTC";
+                    }).map(function (elem) {
+                        var n = elem.symbol.split("BTC").join("/BTC");
+                        return {
+                            nome: n,
+                            symbol: elem.symbol
+                        };
+                    });
+                    callback(r);
+                });
+        }
+
+        $scope.getCommonMarkets = function (callback) {
+            var binanceM = [];
+            var cryptopiaM = [];
+            $scope.getMarketsBinance(function (r) {
+                binanceM = r;
+                $scope.getMarketsCryptopia(function (result) {
+                    cryptopiaM = result.data.Data.map(function (elem) {
+                        return elem.Label
+                    });
+                    var ret = binanceM.filter(function (n) {
+                        return cryptopiaM.indexOf(n.nome) > -1;
+                    });
+                    callback(ret);
+                }, 'BTC');
+            })
+        }
+
+
+
+
+
         // $scope.getData();
-        $scope.getBestMarkets(function (result) {
+        // $scope.getBestMarketsCryptopia(function (result) {
+        //     $scope.markets = result;
+        // }, "BTC", 20, 2, true);
+        // $scope.getMarketsBinance(function (result) {
+        //     console.log(result);
+        // });
+        $scope.getCommonMarkets(function (result) {
+            // console.log(result);
             $scope.markets = result;
-        }, "BTC", 20, 2, true);
+        });
     }
 })();
