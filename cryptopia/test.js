@@ -10,7 +10,7 @@
 
         $scope.markets = [];
 
-        $scope.opts = {
+        $scope.opts = { 
             baseUrl: 'https://www.cryptopia.co.nz/api/',
             apikey: 'APIKEY',
             apisecret: 'APISECRET',
