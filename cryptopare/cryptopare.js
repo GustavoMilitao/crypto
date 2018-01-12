@@ -27,6 +27,13 @@
             return undefined;
         }
 
+        $scope.getObjectFromSymbol = function (symbol, list) {
+            var lst = $.grep(list, function (e) { return e.symbol == symbol; });
+            if (lst.length > 0)
+                return lst[0];
+            return undefined;
+        }
+
         $scope.getCountOfDatesFromDateArray = function (date, dates) {
             var returnDates = [];
             for (var i = 0; i < dates.length; i++) {
@@ -71,10 +78,32 @@
                             / parseFloat((s.BidPrice + 0.00000001).toFixed(8))) * 100),
                         volume: parseFloat(s.Volume),
                         variacao: s.Change
-                    };
-                }).filter(function (elemento) {
-                    return elemento.variacaoCV > 0;
+                    }
                 });
+            return res;
+        }
+
+        $scope.getUsableListFromMarketsBinance = function (result) {
+            var res = result
+                .filter(function (elem) {
+                    return elem.Volume > 0
+                }).map(function (s) {
+                    return {
+                        nome: s.symbol.split("BTC").filter(function (elem) {
+                            return elem && elem != '';
+                        }).join("/BTC"),
+                        pedido: s.askPrice,
+                        ofertado: s.bidPrice,
+                        variacaoCV: (((
+                            parseFloat(
+                                (s.askPrice).toFixed(8)
+                            ) - parseFloat((s.bidPrice).toFixed(8)))
+                            / parseFloat((s.bidPrice + 0.00000001).toFixed(8))) * 100),
+                        volume: parseFloat(s.volume),
+                        variacao: s.priceChangePercent
+                    }
+                });
+
             return res;
         }
 
@@ -227,18 +256,13 @@
         // }
 
         $scope.getMarketsBinance = function (callback) {
-            var url = $scope.opts.baseUrlBinance + 'exchangeInfo';
+            var url = $scope.opts.baseUrlBinance + 'ticker/24hr';
             $http.get(url)
                 .then(function successCallback(result) {
                     var r = result.data.symbols.filter(function (e) {
-                        return e.quoteAsset == "BTC";
-                    }).map(function (elem) {
-                        var n = elem.symbol.split("BTC").join("/BTC");
-                        return {
-                            nome: n,
-                            symbol: elem.symbol
-                        };
+                        return e.symbol.indexOf("BTC") >= 0;
                     });
+                    $scope.getUsableListFromMarketsBinance(r);
                     callback(r);
                 });
         }
