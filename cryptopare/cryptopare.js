@@ -2,10 +2,10 @@
     'use strict';
 
     angular
-        .module('app.cryptopare', ['app.cryptopare.cryptopia'])
+        .module('app.cryptopare', ['app.cryptopare.cryptopia', 'app.cryptopare.binance'])
         .controller('CryptopareController', CryptopareController);
 
-    function CryptopareController($scope, $http, $timeout, cryptopia) {
+    function CryptopareController($scope, $http, $timeout, cryptopia, binance) {
 
 
         $scope.markets = [];
@@ -89,17 +89,7 @@
         //     }
         // }
 
-        $scope.getMarketsBinance = function (callback) {
-            var url = $scope.opts.baseUrlBinance + 'ticker/24hr';
-            $http.get(url)
-                .then(function successCallback(result) {
-                    var r = result.data.filter(function (e) {
-                        return e.symbol.indexOf("BTC") >= 0;
-                    });
-                    r = $scope.getUsableListFromMarketsBinance(r);
-                    callback(r);
-                });
-        }
+
 
         $scope.getMarketsYobit = function (callback) {
             var url = $scope.opts.baseUrlYobit + 'info';
@@ -202,5 +192,9 @@
         // cryptopia.getBestMarkets(function (list) {
         //     $scope.markets = list.sort(firstBy('variacaoCV', -1));
         // });
+
+        binance.getMarkets(function (list) {
+            $scope.markets = list.sort(firstBy('variacaoCV', -1));
+        });
     }
 })();
