@@ -82,7 +82,7 @@
             function (callback, result, count, min, byVariation) {
                 var itemsProcessed = 0;
                 result.forEach(function (elem) {
-                    $scope.getmarkethistory(function (response) {
+                    $scope.getMarketHistoryCryptopia(function (response) {
                         itemsProcessed++;
                         if (response.data && response.data.Data.length > 0) {
                             var id = response.data.Data[0].TradePairId;
@@ -93,8 +93,8 @@
                                     response.data.Data.map(function (elem) {
                                         return new Date(elem.Timestamp * 1000);
                                     });
-                                obj.CountUltimasTransacoes = $scope.getCountOfDatesFromMinutes(ultimasTransacoes, min);
-                                obj.TransacaoMaisRecente = ultimasTransacoes[0].toLocaleDateString('pt-BR') + ' ' + ultimasTransacoes[0].toLocaleTimeString('pt-BR');
+                                obj.countUltimasTransacoes = $scope.getCountOfDatesFromMinutes(ultimasTransacoes, min);
+                                obj.transacaoMaisRecente = ultimasTransacoes[0].toLocaleDateString('pt-BR') + ' ' + ultimasTransacoes[0].toLocaleTimeString('pt-BR');
                             }
                             if (itemsProcessed == result.length) {
                                 if (byVariation) {
@@ -104,7 +104,9 @@
                                     result.sort(firstBy("countUltimasTransacoes", -1)
                                         .thenBy("variacaoCV"), -1);
                                 }
-                                result = result.slice(0, count);
+                                if (count) {
+                                    result = result.slice(0, count);
+                                }
                                 result.sort(firstBy("variacaoCV", -1))
                                 callback(result);
                             }
@@ -263,15 +265,15 @@
 
 
         // $scope.getData();
-        // $scope.getBestMarketsCryptopia(function (result) {
-        //     $scope.markets = result;
-        // }, "BTC", 20, 2, true);
+        $scope.getBestMarketsCryptopia(function (result) {
+            $scope.markets = result;
+        }, "BTC", undefined, 2);
         // $scope.getMarketsBinance(function (result) {
         //     console.log(result);
         // });
-        $scope.getCommonMarkets(function (result) {
-            // console.log(result);
-            $scope.markets = result;
-        });
+        // $scope.getCommonMarkets(function (result) {
+        //     // console.log(result);
+        //     $scope.markets = result;
+        // });
     }
 })();
