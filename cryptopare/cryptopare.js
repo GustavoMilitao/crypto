@@ -105,7 +105,7 @@
                     // r = $scope.getUsableListFromMarketsYobit(callback, r);
                     callback(r);
                 });
-        }
+        } 
 
         $scope.getCommonMarkets = function (callback) {
             var binanceM = [];
