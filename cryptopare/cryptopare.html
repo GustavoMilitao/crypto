@@ -9,6 +9,8 @@
     <script type="text/javascript" src="../lib/md5.js"></script>
     <script type="text/javascript" src="../lib/thenBy.js"></script>
     <!-- <script type="text/javascript" src="cryptopia.js"></script> -->
+    <script type="text/javascript" src="util.js"></script>
+    <script type="text/javascript" src="cryptopia.js"></script>
     <script type="text/javascript" src="cryptopare.js"></script>
     <!-- <script type="text/javascript" src="test2.js"></script> -->
 </head>
@@ -40,6 +42,12 @@
                         <th>
                             Variação tempo
                         </th>
+                        <th>
+                            crypt/yobit
+                        </th>
+                        <th>
+                            yobit/crypto
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,11 +73,19 @@
                         <td>
                             {{m.variacao.toFixed(2) + ' %'}}
                         </td>
+                        <td>
+                            {{m.cryptopiaParaYobit.toFixed(2) + ' %'}}
+                        </td>
+                        <td>
+                            {{m.yobitParaCriptopia.toFixed(2) + ' %'}}
+                        </td>
                     </tr>
                 </tbody>
             </table>
             <input ng-click="ordenarVariacao()" type="button" value="Ordenar por variação">
             <input ng-click="ordenarQuantidadeTransac()" type="button" value="Ordenar por Quantidade de transações">
+            <input ng-click="ordenarCryptoYobit()" type="button" value="Ordenar crypto/yobit">
+            <input ng-click="ordenarYobitCrypto()" type="button" value="Ordenar yobit/crypto">
         </div>
     </div>
 
