@@ -36,8 +36,9 @@
 
         util.split = function (arr, n) {
             var res = [];
-            while (arr.length) {
-                res.push(arr.splice(0, n));
+            var aux = arr.slice(0);
+            while (aux.length) {
+                res.push(aux.splice(0, n));
             }
             return res;
         }

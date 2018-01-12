@@ -26,6 +26,6 @@
 
         yobit.getMarkets(function (list) {
             $scope.markets = list.sort(firstBy('variacaoCV', -1));
-        }, 'BTC');
+        }, 'btc');
     }
 })();
