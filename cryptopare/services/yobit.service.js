@@ -45,7 +45,7 @@
                                 }
                                 if (counter == listOfLsts.length) {
                                     callback(lst);
-                                }
+                                }@
                             });
                         }, 10000);
                     }
