@@ -2,13 +2,23 @@
     'use strict';
 
     angular
-        .module('app.cryptopare', ['app.cryptopare.cryptopia', 'app.cryptopare.binance'])
-        .controller('CryptopareController', CryptopareController);
+        .module('app.cryptopare', ['app.cryptopare.cryptopia.service', 'app.cryptopare.binance.service'])
+        .controller('CryptopiaController', CryptopiaController);
 
-    function CryptopareController($scope, $http, $timeout, cryptopia, binance) {
+    function CryptopiaController($scope, $http, $timeout, cryptopia, binance) {
 
 
         $scope.markets = [];
+
+        $scope.types = {
+            NONE : 0,
+            CRYPTOPIAMARKETS : 1,
+            BINANCEMARKETS : 2,
+            YOBITMARKETS : 3,
+        };
+
+        $scope.type = $scope.types.CRYPTOPIAMARKETS;
+
 
         $scope.opts = {
             baseUrlCryptopia: 'https://www.cryptopia.co.nz/api/',
@@ -189,12 +199,12 @@
 
         // Tests
 
-        // cryptopia.getBestMarkets(function (list) {
+        cryptopia.getBestMarkets(function (list) {
+            $scope.markets = list.sort(firstBy('variacaoCV', -1));
+        }, 'BTC');
+
+        // binance.getMarkets(function (list) {
         //     $scope.markets = list.sort(firstBy('variacaoCV', -1));
         // });
-
-        binance.getMarkets(function (list) {
-            $scope.markets = list.sort(firstBy('variacaoCV', -1));
-        });
     }
 })();

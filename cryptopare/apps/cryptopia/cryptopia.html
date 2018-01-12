@@ -1,0 +1,65 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <script type="text/javascript" src="../../lib/jquery.min.js"></script>
+    <script type="text/javascript" src="../../lib/angular.min.js"></script>
+    <script type="text/javascript" src="../../lib/md5.js"></script>
+    <script type="text/javascript" src="../../lib/thenBy.js"></script>
+    <script type="text/javascript" src="../../services/util.service.js"></script>
+    <script type="text/javascript" src="../../services/cryptopia.service.js"></script>
+    <script type="text/javascript" src="cryptopia.js"></script>
+</head>
+
+<body>
+    <div ng-app="app.cryptopare">
+        <div ng-controller="CryptopiaController">
+            <table class="table table-striped">
+                <thead class="bg-info">
+                    <tr>
+                        <th>
+                            Nome
+                        </th>
+                        <th>
+                            Pedido
+                        </th>
+                        <th>
+                            Ofertado
+                        </th>
+                        <th>
+                            Variação compra/venda
+                        </th>
+                        <th>
+                            Variação tempo
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="m in markets">
+                        <td>
+                            {{m.nome}}
+                        </td>
+                        <td>
+                            {{m.pedido}}
+                        </td>
+                        <td>
+                            {{m.ofertado}}
+                        </td>
+                        <td>
+                            {{m.variacaoCV.toFixed(2) + ' %'}}
+                        </td>
+                        <td>
+                            {{m.variacao.toFixed(2) + ' %'}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <input class="btn btn-primary" ng-click="ordenarVariacao()" type="button" value="Ordenar por variação">
+            <input class="btn btn-primary" ng-click="ordenarQuantidadeTransac()" type="button" value="Ordenar por Quantidade de transações">    
+        </div>
+    </div>
+
+</body>
+
+</html>

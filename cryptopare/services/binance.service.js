@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app.cryptopare.binance', [])
+        .module('app.cryptopare.binance.service', [])
         .factory('binance', binance);
 
     function binance($http) {
@@ -26,7 +26,7 @@
                                 (parseFloat(s.askPrice) - parseFloat(s.bidPrice))
                                 / (parseFloat(s.bidPrice) + 0.00000001)) * 100,
                             volume: parseFloat(s.volume),
-                            variacao: s.priceChangePercent
+                            variacao: parseFloat(s.priceChangePercent)
                         }
                     });
                     callback(list);

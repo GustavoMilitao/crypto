@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app.cryptopare.util', [])
+        .module('app.cryptopare.util.service', [])
         .factory('util', util);
 
     function util() {

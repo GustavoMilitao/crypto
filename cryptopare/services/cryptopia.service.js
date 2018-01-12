@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app.cryptopare.cryptopia', ['app.cryptopare.util'])
+        .module('app.cryptopare.cryptopia.service', ['app.cryptopare.util.service'])
         .factory('cryptopia', cryptopia);
 
     function cryptopia(util, $http) {
@@ -17,22 +17,37 @@
             }
             $http.get(url)
                 .then(function successCallback(result) {
-                    var list = result.data.Data
-                        .filter(function (elem) {
-                            return elem.Volume > 0
-                        }).map(function (s) {
+                    var listWithNames = result.data.Data
+                        .map(function (elem) {
                             return {
-                                nome: s.Label,
-                                pedido: s.AskPrice,
-                                ofertado: s.BidPrice,
-                                variacaoCV:
-                                    ((parseFloat(s.AskPrice) - parseFloat(s.BidPrice))
-                                        / (parseFloat(s.BidPrice) + 0.00000001)) * 100,
-                                volume: parseFloat(s.Volume),
-                                variacao: s.Change
+                                nome: elem.Label
                             }
                         });
-                    callback(list);
+                    var counter = 0;
+                    var lst = [];
+                    for (var i = 0; i < listWithNames.length; i++) {
+                        var url = cryptopia.baseUrl + 'getMarket/' + listWithNames[i].nome.replace("/", "_");
+                        $http.get(url)
+                            .then(function (response) {
+                                counter++;
+                                if (response.data && response.data.Data.Volume > 0) {
+                                    lst.push({
+                                        nome: response.data.Data.Label,
+                                        pedido: response.data.Data.AskPrice,
+                                        ofertado: response.data.Data.BidPrice,
+                                        variacaoCV:
+                                            ((parseFloat(response.data.Data.AskPrice) 
+                                            - parseFloat(response.data.Data.BidPrice))
+                                                / (parseFloat(response.data.Data.BidPrice) + 0.00000001)) * 100,
+                                        volume: parseFloat(response.data.Data.Volume),
+                                        variacao: response.data.Data.Change
+                                    });
+                                }
+                                if (counter == listWithNames.length) {
+                                    callback(lst);
+                                }
+                            });
+                    }
                 });
         }
 
