@@ -33,6 +33,8 @@
                                 if (response.data && response.data.Data.Volume > 0) {
                                     lst.push({
                                         nome: response.data.Data.Label,
+                                        de: response.data.Data.Label.split('/')[0],
+                                        para: response.data.Data.Label.split('/')[1],
                                         pedido: response.data.Data.AskPrice,
                                         ofertado: response.data.Data.BidPrice,
                                         variacaoCV:
@@ -44,7 +46,27 @@
                                     });
                                 }
                                 if (counter == listWithNames.length) {
-                                    callback(lst.filter(function(elem){return elem.volume > 0}));
+                                    var url = cryptopia.baseUrl + 'getCurrencies';
+                                    $http.get(url)
+                                    .then(function(r){
+                                        var l = r.data.Data.filter(function(elem){
+                                            return elem.Status == "OK";
+                                        });
+                                        for(var j = 0; j < l.length; j++){
+                                            var obj = util.getObjectFromProperty(
+                                                'de',
+                                                l[j].Symbol,
+                                                lst);
+                                                if(obj){
+                                                    obj.confirmacoes = l[j].DepositConfirmations
+                                                }
+                                        }
+                                    });
+                                    lst = lst.filter(function(elem){return elem.volume > 0})
+                                    .sort(function(a,b){
+                                        return a.confirmacoes-b.confirmacoes;
+                                    });
+                                    callback(lst);
                                 }
                             });
                     }

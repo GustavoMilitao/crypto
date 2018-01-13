@@ -9,6 +9,7 @@
     <script type="text/javascript" src="../../lib/thenBy.js"></script>
     <script type="text/javascript" src="../../services/util.service.js"></script>
     <script type="text/javascript" src="../../services/yobit.service.js"></script>
+    <script type="text/javascript" src="../../services/binance.service.js"></script>
     <script type="text/javascript" src="../../services/cryptopia.service.js"></script>
     <script type="text/javascript" src="compare.js"></script>
 </head>
@@ -21,6 +22,9 @@
                     <tr>
                         <th>
                             Nome
+                        </th>
+                        <th>
+                            Confirmações
                         </th>
                         <th>
                             compra cryptopia
@@ -46,6 +50,9 @@
                     <tr ng-repeat="m in markets">
                         <td>
                             {{m.nome}}
+                        </td>
+                        <td>
+                            {{m.confirmacoes}}
                         </td>
                         <td>
                             {{m.cryptopiaParayobit.compra}}
