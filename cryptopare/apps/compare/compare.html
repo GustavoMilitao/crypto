@@ -1,0 +1,76 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <script type="text/javascript" src="../../lib/jquery.min.js"></script>
+    <script type="text/javascript" src="../../lib/angular.min.js"></script>
+    <script type="text/javascript" src="../../lib/md5.js"></script>
+    <script type="text/javascript" src="../../lib/thenBy.js"></script>
+    <script type="text/javascript" src="../../services/util.service.js"></script>
+    <script type="text/javascript" src="../../services/yobit.service.js"></script>
+    <script type="text/javascript" src="../../services/cryptopia.service.js"></script>
+    <script type="text/javascript" src="compare.js"></script>
+</head>
+
+<body>
+    <div ng-app="app.cryptopare">
+        <div ng-controller="CompareController">
+            <table class="table table-striped">
+                <thead class="bg-info">
+                    <tr>
+                        <th>
+                            Nome
+                        </th>
+                        <th>
+                            compra cryptopia
+                        </th>
+                        <th>
+                            venda yobit
+                        </th>
+                        <th>
+                            compra yobit
+                        </th>
+                        <th>
+                            venda cryptopia
+                        </th>
+                        <th>
+                            Cryptopia => Yobit (%)
+                        </th>
+                        <th>
+                            Yobit => Cryptopia (%)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="m in markets">
+                        <td>
+                            {{m.nome}}
+                        </td>
+                        <td>
+                            {{m.cryptopiaParayobit.compra}}
+                        </td>
+                        <td>
+                            {{m.cryptopiaParayobit.venda}}
+                        </td>
+                        <td>
+                            {{m.yobitParacryptopia.compra}}
+                        </td>
+                        <td>
+                            {{m.yobitParacryptopia.venda}}
+                        </td>
+                        <td>
+                            {{m.cryptopiaParayobit.variacao.toFixed(2) + '%'}}
+                        </td>
+                        <td>
+                            {{m.yobitParacryptopia.variacao.toFixed(2) + '%'}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>

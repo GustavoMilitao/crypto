@@ -25,6 +25,44 @@
             return returnDates.length;
         }
 
+        util.sleep = function(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+          }
+
+          util.intersect = function (a, b) {
+            var t;
+            if (b.length > a.length) t = b, b = a, a = t; // indexOf to loop over shorter
+            return a.filter(function (e) {
+                return b.indexOf(e) > -1;
+            });
+        }
+
+        util.variationOfMarkets = function (a, b, nameMarketA, nameMarketB) {
+            a.forEach(function(elem){
+                var elemB = util.getObjectFromProperty('nome',elem.nome, b);
+                if(elemB){
+                    elem[nameMarketA+"Para"+nameMarketB] = {
+                        compra : elem.pedido,
+                        venda : elemB.ofertado,
+                        variacao : ((elemB.ofertado - elem.pedido) / elem.pedido) * 100,
+                    };
+                    elem[nameMarketB+"Para"+nameMarketA] = {
+                        compra : elemB.pedido,
+                        venda : elem.ofertado,
+                        variacao : ((elem.ofertado - elemB.pedido) / elemB.pedido) * 100,
+                    };
+                }
+            });
+            return a.map(function(e){
+                if(util.getObjectFromProperty('nome',e.nome, b)){
+                    return e;
+                }
+                return null;
+            }).filter(function(ee){
+                return ee != null;
+            });
+        }
+
         util.getCountOfDatesFromMinutes = function (dates, min) {
             var a = new Date();
             if (min) {

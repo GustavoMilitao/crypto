@@ -13,23 +13,26 @@
             var url = yobit.baseUrl + 'info';
             var lst = [];
             $http.get(url)
-                .then(function successCallback(result) {
+                .then(async function successCallback(result) {
                     lst = Object.keys(result.data.pairs).filter(function (e) {
-                        return baseMarket ? e.indexOf(baseMarket.toLowerCase()) >= 0 : true;
+                        if(baseMarket){
+                            return e.indexOf(baseMarket.toLowerCase()) >= 0 ? true : false;
+                        }
+                        return true;
                     }).map(function (elem) {
                         return {
                             nome: elem.replace("_", "/").toUpperCase()
                         };
                     });
                     var counter = 0;
-                    var listOfLsts = util.split(lst,61);
+                    var listOfLsts = util.split(lst,50);
                     for (var i = 0; i < listOfLsts.length; i++) {
                         var url = yobit.baseUrl + 'ticker/' + 
                         listOfLsts[i]
                         .map(function(elem){
                             return elem.nome.replace("/", "_").toLowerCase();
                         }).join('-');
-                        $timeout(function(){
+                        await util.sleep(100);
                         $http.get(url)
                             .then(function successCallback(result) {
                                 counter++;
@@ -39,7 +42,7 @@
                                     r.pedido = result.data[name].sell;
                                     r.ofertado = result.data[name].buy;
                                     r.volume = result.data[name].vol;
-                                    variacaoCV:
+                                    r.variacaoCV =
                                     ((result.data[name].sell - result.data[name].buy)
                                         / (result.data[name].buy + 0.00000001)) * 100;
                                 }
@@ -47,7 +50,6 @@
                                     callback(lst);
                                 }
                             });
-                        }, 10000);
                     }
                 });
         }
