@@ -47,7 +47,7 @@
                                         / (result.data[name].buy + 0.00000001)) * 100;
                                 }
                                 if (counter == listOfLsts.length) {
-                                    callback(lst);
+                                    callback(lst.filter(function(elem){return elem.volume > 0}));
                                 }
                             });
                     }

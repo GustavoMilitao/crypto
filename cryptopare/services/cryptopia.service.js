@@ -44,7 +44,7 @@
                                     });
                                 }
                                 if (counter == listWithNames.length) {
-                                    callback(lst);
+                                    callback(lst.filter(function(elem){return elem.volume > 0}));
                                 }
                             });
                     }

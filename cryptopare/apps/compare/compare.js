@@ -13,6 +13,20 @@
 
         $scope.markets = [];
 
+        $scope.ordenarCryptopiaYobit = function () {
+            $scope.markets.sort(
+                function(a, b){
+                    return b.cryptopiaParayobit.variacao-a.cryptopiaParayobit.variacao;
+                }
+            );
+        }
+
+        $scope.ordenarYobitCryptopia = function () {
+            $scope.markets.sort(function(a, b){
+                return b.yobitParacryptopia.variacao-a.yobitParacryptopia.variacao;
+            });
+        }
+
         var cryptopiaList = [];
         var yobitList = [];
         cryptopia.getMarkets(function (list) {
