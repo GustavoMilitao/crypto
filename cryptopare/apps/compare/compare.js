@@ -31,8 +31,9 @@
         var cryptopiaList = [];
         var yobitList = [];
         cryptopia.getMarkets(function (list) {
-            cryptopiaList = list.sort(firstBy('variacaoCV', -1));
+            cryptopiaList = list;
             yobit.getMarkets(function(lst){
+                yobitList = lst;
                 $scope.markets = util.variationOfMarkets(cryptopiaList, yobitList, 'cryptopia','yobit');
                 $scope.markets.sort(firstBy('variacaoCV', -1));
             }, 'btc');

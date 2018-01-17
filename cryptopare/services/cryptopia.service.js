@@ -32,14 +32,16 @@
                                 counter++;
                                 if (response.data && response.data.Data.Volume > 0) {
                                     lst.push({
+                                        id: response.data.Data.TradePairId,
                                         nome: response.data.Data.Label,
+                                        baseMarket: response.data.Data.Label.split('/')[1],
                                         de: response.data.Data.Label.split('/')[0],
                                         para: response.data.Data.Label.split('/')[1],
                                         pedido: response.data.Data.AskPrice,
                                         ofertado: response.data.Data.BidPrice,
                                         variacaoCV:
-                                            ((parseFloat(response.data.Data.AskPrice) 
-                                            - parseFloat(response.data.Data.BidPrice))
+                                            ((parseFloat(response.data.Data.AskPrice)
+                                                - parseFloat(response.data.Data.BidPrice))
                                                 / (parseFloat(response.data.Data.BidPrice) + 0.00000001)) * 100,
                                         volume: parseFloat(response.data.Data.Volume),
                                         variacao: response.data.Data.Change
@@ -48,24 +50,24 @@
                                 if (counter == listWithNames.length) {
                                     var url = cryptopia.baseUrl + 'getCurrencies';
                                     $http.get(url)
-                                    .then(function(r){
-                                        var l = r.data.Data.filter(function(elem){
-                                            return elem.Status == "OK";
-                                        });
-                                        for(var j = 0; j < l.length; j++){
-                                            var obj = util.getObjectFromProperty(
-                                                'de',
-                                                l[j].Symbol,
-                                                lst);
-                                                if(obj){
+                                        .then(function (r) {
+                                            var l = r.data.Data.filter(function (elem) {
+                                                return elem.Status == "OK";
+                                            });
+                                            for (var j = 0; j < l.length; j++) {
+                                                var obj = util.getObjectFromProperty(
+                                                    'de',
+                                                    l[j].Symbol,
+                                                    lst);
+                                                if (obj) {
                                                     obj.confirmacoes = l[j].DepositConfirmations
                                                 }
-                                        }
-                                    });
-                                    lst = lst.filter(function(elem){return elem.volume > 0})
-                                    .sort(function(a,b){
-                                        return a.confirmacoes-b.confirmacoes;
-                                    });
+                                            }
+                                        });
+                                    lst = lst.filter(function (elem) { return elem.volume > 0 })
+                                        .sort(function (a, b) {
+                                            return a.confirmacoes - b.confirmacoes;
+                                        });
                                     callback(lst);
                                 }
                             });
@@ -83,6 +85,36 @@
                 .then(function successCallback(result) {
                     callback(result);
                 });
+        }
+
+        cryptopia.variationOfBaseMarkets = function (arrays) {
+            var intersect = util.groupBy(arrays, 'de');
+            if (intersect) {
+                console.log(intersect);
+                // var aux = [];
+                // for (var i = 0; i < intersect.length; i++) {
+                //     var group = intersect[i];
+                //     for (var j = 0; j < group.length; j++) {
+                //         var elem = group[j];
+                //         var a = {};
+                //         a[elem.baseMarket] = {};
+                //         for (var k = 0; k < intersect[i].length; k++) {
+                //             var elem2 = group[k];
+                //             if (elem != elem2) {
+                //                 cryptopia.getMarket(function (response) {
+                //                     if (response.data.Data) {
+                //                         a[elem.baseMarket][elem2.baseMarket].value =
+                //                             response.data.Data.BidPrice;
+
+                //                     }
+                //                 }, elem.baseMarket + '_' + elem2.baseMarket);
+                //             }
+                //         }
+                //         aux.push(a);
+                //     }
+                // }
+                return intersect;
+            }
         }
 
         cryptopia.getTradePairs = function (callback) {

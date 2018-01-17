@@ -2,10 +2,11 @@
     'use strict';
 
     angular
-        .module('app.cryptopare', ['app.cryptopare.cryptopia.service'])
+        .module('app.cryptopare', ['app.cryptopare.cryptopia.service',
+        'app.cryptopare.util.service'])
         .controller('CryptopiaController', CryptopiaController);
 
-    function CryptopiaController($scope, $http, $timeout, cryptopia) {
+    function CryptopiaController($scope, $http, $timeout, cryptopia, util) {
 
         $scope.markets = [];
 
@@ -22,8 +23,13 @@
 
         // Tests
 
-        cryptopia.getBestMarkets(function (list) {
-            $scope.markets = list.sort(firstBy('variacaoCV', -1));
-        }, 'BTC');
+        cryptopia.getMarkets(function (list) {
+            var a = list.sort(firstBy('variacaoCV', -1));
+            console.log(cryptopia.variationOfBaseMarkets(a));
+        });
+
+        // cryptopia.getBestMarkets(function (list) {
+        //     $scope.markets = list.sort(firstBy('variacaoCV', -1));
+        // }, 'BTC');
     }
 })();
