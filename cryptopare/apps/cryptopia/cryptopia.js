@@ -3,7 +3,7 @@
 
     angular
         .module('app.cryptopare', ['app.cryptopare.cryptopia.service',
-        'app.cryptopare.util.service'])
+            'app.cryptopare.util.service'])
         .controller('CryptopiaController', CryptopiaController);
 
     function CryptopiaController($scope, $http, $timeout, cryptopia, util) {
@@ -23,13 +23,13 @@
 
         // Tests
 
-        cryptopia.getMarkets(function (list) {
-            var a = list.sort(firstBy('variacaoCV', -1));
-            console.log(cryptopia.variationOfBaseMarkets(a));
-        });
+        // cryptopia.getMarkets(function (list) {
+        //     var a = list.sort(firstBy('variacaoCV', -1));
+        //     console.log(cryptopia.variationOfBaseMarkets(a));
+        // });
 
-        // cryptopia.getBestMarkets(function (list) {
-        //     $scope.markets = list.sort(firstBy('variacaoCV', -1));
-        // }, 'BTC');
+        cryptopia.getBestMarkets(function (list) {
+            $scope.markets = list.sort(firstBy('variacaoCV', -1));
+        });
     }
 })();
